@@ -1,48 +1,46 @@
-<!-- BEGIN MICROSOFT SECURITY.MD V0.0.1 BLOCK -->
+# Security Policy
 
-## Security
+The security and integrity of **WinCalc-rs** are fundamental to the project's mission of delivering a memory-safe, reliable calculation engine.
 
-Microsoft takes the security of our software products and services seriously, which includes all
-source code repositories managed through our GitHub organizations, which include
-[Microsoft](https://github.com/Microsoft), [Azure](https://github.com/Azure),
-[DotNet](https://github.com/dotnet), [AspNet](https://github.com/aspnet),
-[Xamarin](https://github.com/xamarin), and [many more](https://opensource.microsoft.com/).
+---
 
-If you believe you have found a security vulnerability in any Microsoft-owned repository that meets
-Microsoft's [definition](https://docs.microsoft.com/en-us/previous-versions/tn-archive/cc751383(v=technet.10))
-of a security vulnerability, please report it to us as described below.
+### Core Security Guarantees
 
-## Reporting Security Issues
+* **Strict Memory Safety:** The codebase enforces `#![forbid(unsafe_code)]` at the root and across all submodules. Raw pointers, manual pointer arithmetic, and unverified memory operations are strictly prohibited.
+* **Arithmetic Correctness:** Arbitrary-precision calculations, base conversions, and rational operations must handle potential overflows, underflows, and edge cases safely without causing panics or undefined behavior.
+* **Deterministic Execution:** Memory allocation and state mutations managed via `Rc` and `RefCell` must preserve invariants and prevent borrow panics in single-threaded environments.
 
-**Please do not report security vulnerabilities through public GitHub issues.** Instead, please
-report them to the Microsoft Security Response Center at [secure@microsoft.com](mailto:secure@microsoft.com).
-If possible, encrypt your message with our PGP key; please download it from the
-[Microsoft Security Response Center PGP Key page](https://technet.microsoft.com/en-us/security/dn606155).
+---
 
-You should receive a response within 24 hours. If for some reason you do not, please follow up via
-email to ensure we received your original message. Additional information can be found at
-[microsoft.com/msrc](https://www.microsoft.com/msrc).
+### Scope of Security Vulnerabilities
 
-Please include the requested information listed below (as much as you can provide) to help us better
-understand the nature and scope of the possible issue:
+We consider the following to be actionable security issues:
 
-  * Type of issue (e.g. buffer overflow, SQL injection, cross-site scripting, etc.)
-  * Full paths of source file(s) related to the manifestation of the issue
-  * The location of the affected source code (tag/branch/commit or direct URL)
-  * Any special configuration required to reproduce the issue
-  * Step-by-step instructions to reproduce the issue
-  * Proof-of-concept or exploit code (if possible)
-  * Impact of the issue, including how an attacker might exploit the issue
+* Any mechanism, compiler exploit, or dependency artifact that bypasses `#![forbid(unsafe_code)]` or triggers undefined behavior.
+* Uncontrolled panics or resource exhaustion denial-of-service (DoS) triggered by malformed mathematical expressions or edge-case numerical inputs.
+* Memory leaks, cyclic references, or state corruption in the calculation engine lifecycle.
+* Flaws in foreign function interface (FFI) boundaries that compromise host runtime safety.
 
-This information will help us triage your report more quickly.
+---
 
-## Preferred Languages
+### Reporting a Vulnerability
 
-We prefer all communications to be in English.
+If you discover a security vulnerability or memory safety flaw, please adhere to responsible disclosure practices:
 
-## Policy
+1. **Private Disclosure:** Do not open a public GitHub issue, pull request, or discussion thread.
+2. **Submission Method:** Submit your findings privately through the **GitHub Security Advisory** tab on this repository.
+3. **Report Contents:**
+* A clear and concise description of the issue.
+* A minimal, reproducible example (PoC) or input payload triggering the behavior.
+* Details on the affected component (e.g., Ratpack, CEngine, FFI bindings).
+* Any potential impact analysis or proposed mitigations.
 
-Microsoft follows the principle of
-[Coordinated Vulnerability Disclosure](https://www.microsoft.com/en-us/msrc/cvd).
 
-<!-- END MICROSOFT SECURITY.MD BLOCK -->
+
+---
+
+### Handling and Response Process
+
+* **Acknowledgment:** Maintainers will acknowledge receipt of the vulnerability report within **48 hours**.
+* **Assessment & Fix:** The issue will be triaged, validated, and resolved in a private advisory workspace.
+* **Disclosure:** Once a patch is finalized and merged, a formal security advisory will be published, giving full credit to the researcher (unless anonymity is requested).
