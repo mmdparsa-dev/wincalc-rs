@@ -296,3 +296,7 @@ src/CalcViewModel/DataLoaders/DataLoaderConstants.h
 !src/x64
 !src/x86
 !src/out
+
+# Added by cargo
+
+/target
